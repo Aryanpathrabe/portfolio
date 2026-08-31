@@ -1,41 +1,17 @@
 <!doctype html>
-<html lang="<!-- figma:lang -->">
+<html lang="en">
   <head>
-    <!-- figma:head-start -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Aryan Pathrabe | Portfolio</title>
-    <!-- figma:head-end -->
+    <title>Aryan Pathrabe | Portfolio</title>
   </head>
   <body>
-    <form name="contact" method="POST" data-netlify="true">
-  <input type="hidden" name="form-name" value="contact">
-
-  <input
-    type="text"
-    name="name"
-    placeholder="Your Name"
-    required
-  >
-
-  <input
-    type="email"
-    name="email"
-    placeholder="Your Email"
-    required
-  >
-
-  <textarea
-    name="message"
-    placeholder="Your Message"
-    required
-  ></textarea>
-
-  <button type="submit">Send Message</button>
-</form>
-    <!-- figma:body-start -->
+    <form name="contact" netlify hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- figma:body-end -->
   </body>
 </html>
