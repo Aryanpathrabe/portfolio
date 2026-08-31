@@ -6,11 +6,17 @@
     <title>Aryan Pathrabe | Portfolio</title>
   </head>
   <body>
-    <form name="contact" netlify hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <textarea name="message"></textarea>
-    </form>
+  <form name="contact" method="POST" data-netlify="true">
+  <input type="hidden" name="form-name" value="contact">
+
+  <input type="text" name="name" placeholder="Name" required>
+
+  <input type="email" name="email" placeholder="Email" required>
+
+  <textarea name="message" placeholder="Message" required></textarea>
+
+  <button type="submit">Send</button>
+</form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
