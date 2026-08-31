@@ -584,15 +584,14 @@ export default function App() {
             </span>
           </div>
           <div style={{ display: "flex", gap: "1.5rem" }}>
-            {["GitHub", "LinkedIn", "Instagram"].map((s) => (
+        {[
+              { label: "GitHub", url: "https://github.com/Aryanpathrabe" },
+              { label: "LinkedIn", url: "https://linkedin.com/in/aryanpathrabe" },
+              { label: "Instagram", url: "https://instagram.com/arynn_77" },
+            ].map(({ label, url }) => (
               <a
-                key={s} href="#"
-                style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "#555", textDecoration: "none", transition: "color 0.2s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#555")}
-              >
-                {s}
-              </a>
+                key={label} href={url} target="_blank" rel="noopener noreferrer"
+
             ))}
           </div>
         </div>
