@@ -140,7 +140,12 @@ export default function App() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    const data = new FormData(e.target as HTMLFormElement);
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(data as any).toString(),
+    }).finally(() => setSent(true));
   };
 
   // CSS var shorthands for inline styles
@@ -515,9 +520,9 @@ export default function App() {
               </p>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 {[
-                  { label: "Email",    val: "aryanpathrabe@example.com" },
-                  { label: "LinkedIn", val: "linkedin.com/in/aryanpathrabe" },
-                  { label: "GitHub",   val: "github.com/Aryanpathrabe" },
+                  { label: "Email",    val: "alex@example.com" },
+                  { label: "LinkedIn", val: "linkedin.com/in/alexjordan" },
+                  { label: "GitHub",   val: "github.com/alexjordan" },
                 ].map(({ label, val }) => (
                   <div key={label} style={{ borderTop: "1px solid #2a2a2a", padding: "0.75rem 0" }}>
                     <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.62rem", color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.2rem" }}>{label}</p>
@@ -535,7 +540,8 @@ export default function App() {
                   <p style={{ color: "#888", fontSize: "0.9rem" }}>I&apos;ll get back to you within 24 hours.</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                <form onSubmit={handleSubmit} name="contact" method="POST" data-netlify="true" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                  <input type="hidden" name="form-name" value="contact" />
                   {[
                     { label: "Name",    key: "name" as const,    type: "text",  ph: "Your full name" },
                     { label: "Email",   key: "email" as const,   type: "email", ph: "you@company.com" },
@@ -584,14 +590,19 @@ export default function App() {
             </span>
           </div>
           <div style={{ display: "flex", gap: "1.5rem" }}>
-        {[
+            {[
               { label: "GitHub", url: "https://github.com/Aryanpathrabe" },
               { label: "LinkedIn", url: "https://linkedin.com/in/aryanpathrabe" },
               { label: "Instagram", url: "https://instagram.com/arynn_77" },
             ].map(({ label, url }) => (
               <a
                 key={label} href={url} target="_blank" rel="noopener noreferrer"
-
+                style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "#555", textDecoration: "none", transition: "color 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = accent)}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#555")}
+              >
+                {label}
+              </a>
             ))}
           </div>
         </div>
