@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800;900&display=swap');
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* ── Color tokens ── */
+:root {
+  --bg:        #fafafa;
+  --bg-alt:    #0d0d0d;
+  --fg:        #0d0d0d;
+  --fg-alt:    #fafafa;
+  --muted:     #444;
+  --muted-alt: #aaa;
+  --subtle:    #888;
+  --border:    #e0e0e0;
+  --border-dk: #2a2a2a;
+  --card-bg:   #fafafa;
+  --input-bg:  #fff;
+  --pill-bg:   #fafafa;
+  --watermark: #f0f0f0;
+  --accent:    #e8001c;
+}
+
+html.dark {
+  --bg:        #0d0d0d;
+  --bg-alt:    #161616;
+  --fg:        #fafafa;
+  --fg-alt:    #0d0d0d;
+  --muted:     #aaa;
+  --muted-alt: #444;
+  --subtle:    #666;
+  --border:    #2a2a2a;
+  --border-dk: #333;
+  --card-bg:   #161616;
+  --input-bg:  #161616;
+  --pill-bg:   #161616;
+  --watermark: #181818;
+  --accent:    #e8001c;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+
+/* ── Nav link ── */
+.nav-link {
+  position: relative;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--fg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1.5px;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after,
+.nav-link.active::after { width: 100%; }
+.nav-link:hover { color: var(--accent); }
+
+/* ── Utility ── */
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border);
+  color: var(--subtle);
+  text-transform: uppercase;
+  background: var(--pill-bg);
+  transition: border-color 0.3s, background 0.3s;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  display: inline-block;
+  font-family: 'Jost', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+.btn-primary:hover { background: #bf0016; transform: translateY(-1px); }
+
+.btn-outline {
+  display: inline-block;
+  font-family: 'Jost', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  color: var(--fg);
+  border: 1.5px solid var(--fg);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  background: var(--fg);
+  color: var(--bg);
+  transform: translateY(-1px);
+}
+
+/* ── Project card ── */
+.project-card {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, transform 0.25s, background 0.3s;
+}
+.project-card:hover { border-color: var(--fg); transform: translateY(-3px); }
+
+/* ── Form inputs ── */
+input, textarea {
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--fg);
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, background 0.3s, color 0.3s;
+}
+input::placeholder, textarea::placeholder { color: var(--subtle); }
+input:focus, textarea:focus { border-color: var(--fg); }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s, border-color 0.3s;
+  flex-shrink: 0;
+}
+.theme-toggle-knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--fg);
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+html.dark .theme-toggle-knob { transform: translateX(18px); }
+
+/* ── Hamburger ── */
+.menu-line {
+  display: block;
+  width: 22px; height: 1.5px;
+  background: var(--fg);
+  transition: transform 0.3s, opacity 0.3s, background 0.3s;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+  .show-mobile   { display: flex !important; }
+
+  /* Hero */
+  .hero-section {
+    padding: 100px 1.25rem 60px !important;
+    min-height: 100svh !important;
+  }
+
+  /* Section padding */
+  .section-pad {
+    padding: 60px 0 !important;
+  }
+
+  /* Two-col grids → single col */
+  .two-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+  }
+
+  /* About grid stays 1-col on mobile, photo hidden */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    align-items: center !important;
+  }
+
+  .about-photo {
+    display: none !important;
+  }
+
+  .about-grid h2 {
+    font-size: 0.95rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .about-grid p {
+    font-size: 0.78rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .about-grid .about-badges {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.35rem !important;
+  }
+
+  .about-grid .about-badges span {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.6rem !important;
+    width: auto !important;
+  }
+
+  /* Projects → horizontal swipe carousel on mobile */
+  .projects-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 0.75rem !important;
+    background: transparent !important;
+    padding-bottom: 1rem !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .projects-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .projects-grid .project-card {
+    flex: 0 0 78vw !important;
+    scroll-snap-align: start !important;
+    border: 1px solid var(--border) !important;
+    max-width: 300px !important;
+  }
+
+  .projects-grid .project-card > div:first-child {
+    aspect-ratio: 16/9 !important;
+  }
+
+  .projects-grid .project-card > div:last-child {
+    padding: 1rem !important;
+  }
+
+  .projects-grid .project-card h3 {
+    font-size: 1rem !important;
+  }
+
+  .projects-grid .project-card p {
+    font-size: 0.75rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .projects-grid .project-card .tag {
+    font-size: 0.58rem !important;
+    padding: 0.15rem 0.4rem !important;
+  }
+
+  .projects-grid .project-card a {
+    font-size: 0.68rem !important;
+  }
+
+  /* About photo max width */
+  .about-photo {
+    max-width: 100% !important;
+  }
+
+  /* Footer */
+  .footer-inner {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  /* Scroll arrow visible on mobile */
+  .scroll-arrow { display: flex !important; }
+}
+
+@media (min-width: 769px) {
+  .show-mobile { display: none !important; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Projects → 2 col on tablet */
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
