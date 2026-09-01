@@ -7,6 +7,20 @@ body,
   height: 100%;
 }
 
+/* Admin panel responsive grid */
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
 /* ── Color tokens ── */
 :root {
   --bg:        #fafafa;
