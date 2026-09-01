@@ -1869,7 +1869,7 @@ export default function App() {
                         textDecoration: "none",
                       }}
                     >
-                      View case study →
+                        Discover More →
                     </a>
                   </div>
                 </article>
