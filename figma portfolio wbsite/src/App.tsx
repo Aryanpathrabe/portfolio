@@ -520,9 +520,9 @@ export default function App() {
               </p>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 {[
-                  { label: "Email",    val: "aryanpathrabe@gmail.com" },
-                  { label: "LinkedIn", val: "linkedin.com/in/aryanpathrabe" },
-                  { label: "GitHub",   val: "github.com/Aryanpathrabe" },
+                  { label: "Email",    val: "alex@example.com" },
+                  { label: "LinkedIn", val: "linkedin.com/in/alexjordan" },
+                  { label: "GitHub",   val: "github.com/alexjordan" },
                 ].map(({ label, val }) => (
                   <div key={label} style={{ borderTop: "1px solid #2a2a2a", padding: "0.75rem 0" }}>
                     <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.62rem", color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.2rem" }}>{label}</p>
@@ -549,7 +549,7 @@ export default function App() {
                     <div key={key}>
                       <label style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: "0.5rem" }}>{label}</label>
                       <input
-                        required type={type} placeholder={ph}
+                        required type={type} placeholder={ph} name={key}
                         value={formData[key]}
                         onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                         style={{ background: "#161616", border: "1px solid #2a2a2a", color: "#fafafa" }}
@@ -559,7 +559,7 @@ export default function App() {
                   <div>
                     <label style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: "0.5rem" }}>Message</label>
                     <textarea
-                      required rows={5} placeholder="Tell me about your project..."
+                      required rows={5} placeholder="Tell me about your project..." name="message"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       style={{ background: "#161616", border: "1px solid #2a2a2a", color: "#fafafa", resize: "vertical" }}
