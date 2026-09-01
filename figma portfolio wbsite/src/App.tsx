@@ -1748,7 +1748,7 @@ export default function App() {
             className="projects-grid"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+             gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
               gap: "1px",
               background: border,
             }}
