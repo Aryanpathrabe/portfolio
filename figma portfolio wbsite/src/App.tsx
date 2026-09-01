@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Admin from "./pages/Admin";
 
 const NAV_ITEMS = ["Home", "About", "Skills", "Projects", "Contact"];
 
@@ -107,6 +108,7 @@ function useDark() {
 }
 
 export default function App() {
+  if (window.location.pathname === "/admin") return <Admin />;
   const [dark, setDark] = useDark();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -520,9 +522,9 @@ export default function App() {
               </p>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 {[
-                  { label: "Email",    val: "aryanpathrabe@gmail.com" },
-                  { label: "LinkedIn", val: "linkedin.com/in/aryanpathrabe" },
-                  { label: "GitHub",   val: "github.com/Aryanpathrabe" },
+                  { label: "Email",    val: "alex@example.com" },
+                  { label: "LinkedIn", val: "linkedin.com/in/alexjordan" },
+                  { label: "GitHub",   val: "github.com/alexjordan" },
                 ].map(({ label, val }) => (
                   <div key={label} style={{ borderTop: "1px solid #2a2a2a", padding: "0.75rem 0" }}>
                     <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.62rem", color: "#555", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.2rem" }}>{label}</p>
