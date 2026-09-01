@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
-const ADMIN_PASSWORD = "aryan@admin123";
+const ADMIN_PASSWORD = "admin123@";
 
 type Project = {
   id?: string;
