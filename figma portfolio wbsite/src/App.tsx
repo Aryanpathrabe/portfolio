@@ -6,7 +6,7 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4bGJnaWlmaWVzbWJyZWVkeGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTk5NDcsImV4cCI6MjEwMzc5NTk0N30.jQdWep7rYWWa_QCLzyVqAbaCUhaZpf_ETaJL-JS9oFc",
 )
 
-const ADMIN_PASSWORD = "admin123"
+const ADMIN_PASSWORD = "admin@123"
 
 type Project = {
   id?: string
@@ -1748,7 +1748,7 @@ export default function App() {
             className="projects-grid"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+              gridTemplateColumns: "repeat(3, 1fr)",
               gap: "1px",
               background: border,
             }}
