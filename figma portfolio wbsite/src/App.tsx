@@ -6,7 +6,7 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4bGJnaWlmaWVzbWJyZWVkeGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTk5NDcsImV4cCI6MjEwMzc5NTk0N30.jQdWep7rYWWa_QCLzyVqAbaCUhaZpf_ETaJL-JS9oFc"
 );
 
-const ADMIN_PASSWORD = "aryan@admin123";
+const ADMIN_PASSWORD = "adminji@123";
 
 type Project = { id?: string; num: string; title: string; role: string; category: string; tags: string[]; description: string; img: string; link: string; };
 type Skill = { id?: string; name: string; level: number; };
