@@ -59,24 +59,25 @@ function Admin() {
   );
   return (
     <div style={{ minHeight: "100vh", background: "#0d0d0d", color: "#fafafa", fontFamily: "'DM Sans', sans-serif" }}>
-      <header style={{ background: "#111", borderBottom: "1px solid #2a2a2a", padding: "1rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 800, fontSize: "1.1rem" }}><span style={{ color: ac }}>&lt;</span>Admin Panel<span style={{ color: ac }}> /&gt;</span></h1>
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          {msg && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.7rem", color: "#2dd4ac" }}>{msg}</span>}
-          <button onClick={() => window.location.href = "/"} style={{ ...bS, background: "transparent", color: "#666", border: "1px solid #2a2a2a" }}>← Portfolio</button>
-          <button onClick={() => setAuthed(false)} style={{ ...bS, background: "#1a1a1a", color: "#fafafa", border: "1px solid #2a2a2a" }}>Logout</button>
+      <header style={{ background: "#111", borderBottom: "1px solid #2a2a2a", padding: "0.9rem 1.25rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+        <h1 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 800, fontSize: "1rem" }}><span style={{ color: ac }}>&lt;</span>Admin<span style={{ color: ac }}> /&gt;</span></h1>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          {msg && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.65rem", color: "#2dd4ac" }}>{msg}</span>}
+          <button onClick={() => window.location.href = "/"} style={{ ...bS, background: "transparent", color: "#666", border: "1px solid #2a2a2a", padding: "0.45rem 0.85rem", fontSize: "0.72rem" }}>← Back</button>
+          <button onClick={() => setAuthed(false)} style={{ ...bS, background: "#1a1a1a", color: "#fafafa", border: "1px solid #2a2a2a", padding: "0.45rem 0.85rem", fontSize: "0.72rem" }}>Logout</button>
         </div>
       </header>
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem" }}>
-        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "2rem" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.25rem" }}>
+        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
           {(["projects", "skills"] as const).map((t) => <button key={t} onClick={() => setTab(t)} style={{ ...bS, background: tab === t ? ac : "#1a1a1a", color: tab === t ? "#fff" : "#aaa", border: "1px solid #2a2a2a" }}>{t}</button>)}
         </div>
+
         {tab === "projects" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "2rem", alignItems: "start" }}>
-            <div style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1.5rem" }}>
-              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", marginBottom: "1.25rem", color: "#fafafa" }}>{editingProject ? "Edit Project" : "Add Project"}</h2>
+          <div className="admin-grid">
+            <div style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1.25rem" }}>
+              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", marginBottom: "1.1rem", color: "#fafafa" }}>{editingProject ? "Edit Project" : "Add Project"}</h2>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
-                {([{ label: "Number", key: "num" }, { label: "Title", key: "title" }, { label: "Role", key: "role" }, { label: "Image URL", key: "img" }, { label: "Project Link", key: "link" }, { label: "Tags (comma separated)", key: "tags" }] as { label: string; key: keyof Project }[]).map(({ label, key }) => (
+                {([{ label: "Number (e.g. 01)", key: "num" }, { label: "Title", key: "title" }, { label: "Role (e.g. Core · 2024)", key: "role" }, { label: "Image URL", key: "img" }, { label: "Project Link", key: "link" }, { label: "Tags (comma separated)", key: "tags" }] as { label: string; key: keyof Project }[]).map(({ label, key }) => (
                   <div key={key}><label style={lS}>{label}</label><input style={iS} value={Array.isArray(projectForm[key]) ? (projectForm[key] as string[]).join(", ") : projectForm[key] as string} onChange={(e) => setProjectForm({ ...projectForm, [key]: e.target.value })} placeholder={label} /></div>
                 ))}
                 <div><label style={lS}>Category</label><select value={projectForm.category} onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })} style={{ ...iS }}><option value="Core">Core</option><option value="AI Projects">AI Projects</option></select></div>
@@ -91,21 +92,25 @@ function Admin() {
               <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", color: "#fafafa" }}>Projects ({projects.length})</h2>
               {projects.length === 0 && <p style={{ color: "#555", fontSize: "0.85rem" }}>No projects yet!</p>}
               {projects.map((p) => (
-                <div key={p.id} style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div><p style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "0.95rem" }}>{p.num} — {p.title}</p><p style={{ color: "#666", fontSize: "0.8rem" }}>{p.category}</p></div>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <button onClick={() => { setProjectForm({ ...p, tags: p.tags || [] }); setEditingProject(p.id!); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a", fontSize: "0.72rem" }}>Edit</button>
-                    <button onClick={() => deleteProject(p.id!)} style={{ ...bS, background: "#2a0a0a", color: ac, border: `1px solid ${ac}`, fontSize: "0.72rem" }}>Delete</button>
+                <div key={p.id} style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "0.9rem 1rem", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.75rem" }}>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "0.9rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.num} — {p.title}</p>
+                    <p style={{ color: "#666", fontSize: "0.75rem" }}>{p.category}</p>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0 }}>
+                    <button onClick={() => { setProjectForm({ ...p, tags: p.tags || [] }); setEditingProject(p.id!); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a", fontSize: "0.68rem", padding: "0.4rem 0.75rem" }}>Edit</button>
+                    <button onClick={() => deleteProject(p.id!)} style={{ ...bS, background: "#2a0a0a", color: ac, border: `1px solid ${ac}`, fontSize: "0.68rem", padding: "0.4rem 0.75rem" }}>Del</button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         )}
+
         {tab === "skills" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "2rem", alignItems: "start" }}>
-            <div style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1.5rem" }}>
-              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", marginBottom: "1.25rem" }}>{editingSkill ? "Edit Skill" : "Add Skill"}</h2>
+          <div className="admin-grid">
+            <div style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1.25rem" }}>
+              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", marginBottom: "1.1rem" }}>{editingSkill ? "Edit Skill" : "Add Skill"}</h2>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
                 <div><label style={lS}>Skill Name</label><input style={iS} value={skillForm.name} onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })} placeholder="e.g. React" /></div>
                 <div><label style={lS}>Level: {skillForm.level}%</label><input type="range" min={0} max={100} value={skillForm.level} onChange={(e) => setSkillForm({ ...skillForm, level: Number(e.target.value) })} style={{ width: "100%", accentColor: ac }} /></div>
@@ -119,14 +124,14 @@ function Admin() {
               <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem" }}>Skills ({skills.length})</h2>
               {skills.length === 0 && <p style={{ color: "#555", fontSize: "0.85rem" }}>No skills yet!</p>}
               {skills.map((s) => (
-                <div key={s.id} style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ flex: 1, marginRight: "1rem" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}><span style={{ fontFamily: "'Jost', sans-serif", fontWeight: 600 }}>{s.name}</span><span style={{ color: ac, fontFamily: "'DM Mono', monospace", fontSize: "0.7rem" }}>{s.level}%</span></div>
+                <div key={s.id} style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "0.9rem 1rem", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "0.75rem" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}><span style={{ fontFamily: "'Jost', sans-serif", fontWeight: 600, fontSize: "0.88rem" }}>{s.name}</span><span style={{ color: ac, fontFamily: "'DM Mono', monospace", fontSize: "0.7rem" }}>{s.level}%</span></div>
                     <div style={{ background: "#2a2a2a", height: "2px" }}><div style={{ background: ac, height: "2px", width: `${s.level}%` }} /></div>
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <button onClick={() => { setSkillForm(s); setEditingSkill(s.id!); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a", fontSize: "0.72rem" }}>Edit</button>
-                    <button onClick={() => deleteSkill(s.id!)} style={{ ...bS, background: "#2a0a0a", color: ac, border: `1px solid ${ac}`, fontSize: "0.72rem" }}>Delete</button>
+                  <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0 }}>
+                    <button onClick={() => { setSkillForm(s); setEditingSkill(s.id!); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a", fontSize: "0.68rem", padding: "0.4rem 0.75rem" }}>Edit</button>
+                    <button onClick={() => deleteSkill(s.id!)} style={{ ...bS, background: "#2a0a0a", color: ac, border: `1px solid ${ac}`, fontSize: "0.68rem", padding: "0.4rem 0.75rem" }}>Del</button>
                   </div>
                 </div>
               ))}
