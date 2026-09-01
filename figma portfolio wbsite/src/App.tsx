@@ -1,5 +1,142 @@
 import { useState, useEffect, useRef } from "react";
-import Admin from "./pages/Admin";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://dxlbgiifiesmbreedxhf.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4bGJnaWlmaWVzbWJyZWVkeGhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTk5NDcsImV4cCI6MjEwMzc5NTk0N30.jQdWep7rYWWa_QCLzyVqAbaCUhaZpf_ETaJL-JS9oFc"
+);
+
+const ADMIN_PASSWORD = "aryan@admin123";
+
+type Project = { id?: string; num: string; title: string; role: string; category: string; tags: string[]; description: string; img: string; link: string; };
+type Skill = { id?: string; name: string; level: number; };
+const emptyProject: Project = { num: "", title: "", role: "", category: "Core", tags: [], description: "", img: "", link: "" };
+const emptySkill: Skill = { name: "", level: 50 };
+
+function Admin() {
+  const [authed, setAuthed] = useState(false);
+  const [password, setPassword] = useState("");
+  const [tab, setTab] = useState<"projects" | "skills">("projects");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [projectForm, setProjectForm] = useState<Project>(emptyProject);
+  const [skillForm, setSkillForm] = useState<Skill>(emptySkill);
+  const [editingProject, setEditingProject] = useState<string | null>(null);
+  const [editingSkill, setEditingSkill] = useState<string | null>(null);
+  const [msg, setMsg] = useState("");
+  useEffect(() => { if (authed) { fetchProjects(); fetchSkills(); } }, [authed]);
+  async function fetchProjects() { const { data } = await supabase.from("projects").select("*").order("num"); if (data) setProjects(data); }
+  async function fetchSkills() { const { data } = await supabase.from("skills").select("*").order("created_at"); if (data) setSkills(data); }
+  function flash(m: string) { setMsg(m); setTimeout(() => setMsg(""), 2500); }
+  async function saveProject() {
+    const payload = { ...projectForm, tags: typeof projectForm.tags === "string" ? (projectForm.tags as unknown as string).split(",").map((t) => t.trim()) : projectForm.tags };
+    if (editingProject) { await supabase.from("projects").update(payload).eq("id", editingProject); flash("Project updated!"); }
+    else { await supabase.from("projects").insert(payload); flash("Project added!"); }
+    setProjectForm(emptyProject); setEditingProject(null); fetchProjects();
+  }
+  async function deleteProject(id: string) { await supabase.from("projects").delete().eq("id", id); flash("Project deleted!"); fetchProjects(); }
+  async function saveSkill() {
+    if (editingSkill) { await supabase.from("skills").update(skillForm).eq("id", editingSkill); flash("Skill updated!"); }
+    else { await supabase.from("skills").insert(skillForm); flash("Skill added!"); }
+    setSkillForm(emptySkill); setEditingSkill(null); fetchSkills();
+  }
+  async function deleteSkill(id: string) { await supabase.from("skills").delete().eq("id", id); flash("Skill deleted!"); fetchSkills(); }
+  const ac = "#e8001c";
+  const iS = { background: "#1a1a1a", border: "1px solid #2a2a2a", color: "#fafafa", padding: "0.6rem 0.9rem", width: "100%", fontFamily: "'DM Sans', sans-serif", fontSize: "0.9rem", borderRadius: "4px" };
+  const lS = { fontFamily: "'DM Mono', monospace", fontSize: "0.62rem", color: "#666", letterSpacing: "0.1em", textTransform: "uppercase" as const, display: "block", marginBottom: "0.35rem" };
+  const bS = { fontFamily: "'Jost', sans-serif", fontWeight: 600, fontSize: "0.8rem", letterSpacing: "0.08em", textTransform: "uppercase" as const, padding: "0.6rem 1.4rem", border: "none", cursor: "pointer", borderRadius: "4px" };
+  if (!authed) return (
+    <div style={{ minHeight: "100vh", background: "#0d0d0d", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "#161616", border: "1px solid #2a2a2a", padding: "2.5rem", width: "100%", maxWidth: "360px", borderRadius: "8px" }}>
+        <h1 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 800, color: "#fafafa", fontSize: "1.5rem", marginBottom: "0.5rem" }}><span style={{ color: ac }}>&lt;</span>Admin<span style={{ color: ac }}> /&gt;</span></h1>
+        <p style={{ color: "#666", fontSize: "0.85rem", marginBottom: "1.5rem", fontFamily: "'DM Sans', sans-serif" }}>Portfolio control panel</p>
+        <label style={lS}>Password</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (password === ADMIN_PASSWORD ? setAuthed(true) : flash("Wrong password!"))} style={{ ...iS, marginBottom: "1rem" }} placeholder="Enter password" />
+        {msg && <p style={{ color: ac, fontSize: "0.8rem", marginBottom: "0.75rem" }}>{msg}</p>}
+        <button onClick={() => password === ADMIN_PASSWORD ? setAuthed(true) : flash("Wrong password!")} style={{ ...bS, background: ac, color: "#fff", width: "100%" }}>Login</button>
+      </div>
+    </div>
+  );
+  return (
+    <div style={{ minHeight: "100vh", background: "#0d0d0d", color: "#fafafa", fontFamily: "'DM Sans', sans-serif" }}>
+      <header style={{ background: "#111", borderBottom: "1px solid #2a2a2a", padding: "1rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 800, fontSize: "1.1rem" }}><span style={{ color: ac }}>&lt;</span>Admin Panel<span style={{ color: ac }}> /&gt;</span></h1>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          {msg && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.7rem", color: "#2dd4ac" }}>{msg}</span>}
+          <button onClick={() => window.location.href = "/"} style={{ ...bS, background: "transparent", color: "#666", border: "1px solid #2a2a2a" }}>← Portfolio</button>
+          <button onClick={() => setAuthed(false)} style={{ ...bS, background: "#1a1a1a", color: "#fafafa", border: "1px solid #2a2a2a" }}>Logout</button>
+        </div>
+      </header>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem" }}>
+        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "2rem" }}>
+          {(["projects", "skills"] as const).map((t) => <button key={t} onClick={() => setTab(t)} style={{ ...bS, background: tab === t ? ac : "#1a1a1a", color: tab === t ? "#fff" : "#aaa", border: "1px solid #2a2a2a" }}>{t}</button>)}
+        </div>
+        {tab === "projects" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "2rem", alignItems: "start" }}>
+            <div style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1.5rem" }}>
+              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", marginBottom: "1.25rem", color: "#fafafa" }}>{editingProject ? "Edit Project" : "Add Project"}</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                {([{ label: "Number", key: "num" }, { label: "Title", key: "title" }, { label: "Role", key: "role" }, { label: "Image URL", key: "img" }, { label: "Project Link", key: "link" }, { label: "Tags (comma separated)", key: "tags" }] as { label: string; key: keyof Project }[]).map(({ label, key }) => (
+                  <div key={key}><label style={lS}>{label}</label><input style={iS} value={Array.isArray(projectForm[key]) ? (projectForm[key] as string[]).join(", ") : projectForm[key] as string} onChange={(e) => setProjectForm({ ...projectForm, [key]: e.target.value })} placeholder={label} /></div>
+                ))}
+                <div><label style={lS}>Category</label><select value={projectForm.category} onChange={(e) => setProjectForm({ ...projectForm, category: e.target.value })} style={{ ...iS }}><option value="Core">Core</option><option value="AI Projects">AI Projects</option></select></div>
+                <div><label style={lS}>Description</label><textarea rows={3} style={{ ...iS, resize: "vertical" }} value={projectForm.description} onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })} placeholder="Description" /></div>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button onClick={saveProject} style={{ ...bS, background: ac, color: "#fff", flex: 1 }}>{editingProject ? "Update" : "Add"} Project</button>
+                  {editingProject && <button onClick={() => { setProjectForm(emptyProject); setEditingProject(null); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a" }}>Cancel</button>}
+                </div>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", color: "#fafafa" }}>Projects ({projects.length})</h2>
+              {projects.length === 0 && <p style={{ color: "#555", fontSize: "0.85rem" }}>No projects yet!</p>}
+              {projects.map((p) => (
+                <div key={p.id} style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div><p style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "0.95rem" }}>{p.num} — {p.title}</p><p style={{ color: "#666", fontSize: "0.8rem" }}>{p.category}</p></div>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button onClick={() => { setProjectForm({ ...p, tags: p.tags || [] }); setEditingProject(p.id!); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a", fontSize: "0.72rem" }}>Edit</button>
+                    <button onClick={() => deleteProject(p.id!)} style={{ ...bS, background: "#2a0a0a", color: ac, border: `1px solid ${ac}`, fontSize: "0.72rem" }}>Delete</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {tab === "skills" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "2rem", alignItems: "start" }}>
+            <div style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1.5rem" }}>
+              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem", marginBottom: "1.25rem" }}>{editingSkill ? "Edit Skill" : "Add Skill"}</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div><label style={lS}>Skill Name</label><input style={iS} value={skillForm.name} onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })} placeholder="e.g. React" /></div>
+                <div><label style={lS}>Level: {skillForm.level}%</label><input type="range" min={0} max={100} value={skillForm.level} onChange={(e) => setSkillForm({ ...skillForm, level: Number(e.target.value) })} style={{ width: "100%", accentColor: ac }} /></div>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button onClick={saveSkill} style={{ ...bS, background: ac, color: "#fff", flex: 1 }}>{editingSkill ? "Update" : "Add"} Skill</button>
+                  {editingSkill && <button onClick={() => { setSkillForm(emptySkill); setEditingSkill(null); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a" }}>Cancel</button>}
+                </div>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <h2 style={{ fontFamily: "'Jost', sans-serif", fontWeight: 700, fontSize: "1rem" }}>Skills ({skills.length})</h2>
+              {skills.length === 0 && <p style={{ color: "#555", fontSize: "0.85rem" }}>No skills yet!</p>}
+              {skills.map((s) => (
+                <div key={s.id} style={{ background: "#111", border: "1px solid #2a2a2a", borderRadius: "8px", padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ flex: 1, marginRight: "1rem" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}><span style={{ fontFamily: "'Jost', sans-serif", fontWeight: 600 }}>{s.name}</span><span style={{ color: ac, fontFamily: "'DM Mono', monospace", fontSize: "0.7rem" }}>{s.level}%</span></div>
+                    <div style={{ background: "#2a2a2a", height: "2px" }}><div style={{ background: ac, height: "2px", width: `${s.level}%` }} /></div>
+                  </div>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button onClick={() => { setSkillForm(s); setEditingSkill(s.id!); }} style={{ ...bS, background: "#1a1a1a", color: "#aaa", border: "1px solid #2a2a2a", fontSize: "0.72rem" }}>Edit</button>
+                    <button onClick={() => deleteSkill(s.id!)} style={{ ...bS, background: "#2a0a0a", color: ac, border: `1px solid ${ac}`, fontSize: "0.72rem" }}>Delete</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const NAV_ITEMS = ["Home", "About", "Skills", "Projects", "Contact"];
 
@@ -116,6 +253,24 @@ export default function App() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [dbProjects, setDbProjects] = useState<typeof PROJECTS | null>(null);
+  const [dbSkills, setDbSkills] = useState<typeof SKILLS | null>(null);
+
+  useEffect(() => {
+    supabase.from("projects").select("*").order("num").then(({ data }) => {
+      if (data && data.length > 0) {
+        setDbProjects(data.map((p: any) => ({ num: p.num, title: p.title, role: p.role, category: p.category, tags: p.tags || [], desc: p.description, img: p.img, link: p.link })));
+      }
+    });
+    supabase.from("skills").select("*").order("created_at").then(({ data }) => {
+      if (data && data.length > 0) {
+        setDbSkills(data.map((s: any) => ({ name: s.name, level: s.level })));
+      }
+    });
+  }, []);
+
+  const projects = dbProjects ?? PROJECTS;
+  const skills = dbSkills ?? SKILLS;
 
   const skillsSection = useInView(0.2);
 
@@ -420,7 +575,7 @@ export default function App() {
             </div>
 
             <div>
-              {SKILLS.map((skill) => (
+              {skills.map((skill) => (
                 <div key={skill.name} style={{ borderTop: "1px solid #2a2a2a", padding: "1.25rem 0" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem" }}>
                     <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: "#fafafa", fontSize: "0.95rem" }}>{skill.name}</span>
@@ -474,7 +629,7 @@ export default function App() {
           </div>
 
           <div className="projects-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: border }}>
-            {PROJECTS.filter((p) => activeFilter === "All" || p.category === activeFilter).map((p) => (
+            {projects.filter((p) => activeFilter === "All" || p.category === activeFilter).map((p) => (
               <article key={p.num} className="project-card">
                 <div style={{ aspectRatio: "16/9", background: border, overflow: "hidden" }}>
                   <img
