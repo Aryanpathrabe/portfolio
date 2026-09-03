@@ -8,21 +8,18 @@
     <!-- figma:head-end -->
   </head>
   <body>
-     <form name="contact" netlify hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <textarea name="message"></textarea>
-    </form>
-  <form name="contact" method="POST" data-netlify="true">
-  <input type="hidden" name="form-name" value="contact">
+     <form action="https://api.web3forms.com/submit" method="POST">
 
-  <input type="text" name="name" placeholder="Name" required>
+    <input type="hidden" name="access_key" value="4f079238-ff15-418e-a1d6-8042092d7a12">
 
-  <input type="email" name="email" placeholder="Email" required>
+    <input type="text" name="name" placeholder="Your Name" required>
 
-  <textarea name="message" placeholder="Message" required></textarea>
+    <input type="email" name="email" placeholder="Your Email" required>
 
-  <button type="submit">Send</button>
+    <textarea name="message" placeholder="Your Message" required></textarea>
+
+    <button type="submit">Send Message</button>
+
 </form>
     <!-- figma:body-start -->
     <div id="root"></div>
