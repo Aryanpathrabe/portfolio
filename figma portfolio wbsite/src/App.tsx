@@ -2023,7 +2023,7 @@ export default function App() {
                   <input
                     type="hidden"
                     name="access_key"
-                    value="YOUR_WEB3FORMS_ACCESS_KEY"
+                    value="4f079238-ff15-418e-a1d6-8042092d7a12"
                   />
                   {[
                     {
