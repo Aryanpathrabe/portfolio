@@ -19,7 +19,7 @@ type Project = {
   img: string
   link: string
 }
-type Skill = { id?: string name: string level: number }
+type Skill = { id?: string; name: string; level: number }
 const emptyProject: Project = {
   num: "",
   title: "",
@@ -366,7 +366,7 @@ function Admin() {
                   { label: "Role (e.g. Core · 2024)", key: "role" },
                   { label: "Project Link", key: "link" },
                   { label: "Tags (comma separated)", key: "tags" },
-                ] as { label: string key: keyof Project }[]).map(
+                ] as { label: string; key: keyof Project }[]).map(
                   ({ label, key }) => (
                     <div key={key}>
                       <label style={lS}>{label}</label>
